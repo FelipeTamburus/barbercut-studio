@@ -3,451 +3,864 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BarberPrimeCut Studio — Barbearia Masculina</title>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <title>BarberPrimeCut Studio — Barbearia Masculina Premium</title>
+  <meta name="description" content="BarberPrimeCut Studio — Corte, barba e estilo masculino de alto nível. Agende seu horário." />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --black: #0d0d0d;
-      --dark: #1a1a1a;
-      --card: #222222;
-      --gold: #c8a84b;
-      --gold-light: #e2c97e;
-      --white: #f5f5f5;
-      --muted: #888;
+      --black:     #080808;
+      --dark:      #111111;
+      --card:      #181818;
+      --border:    #2a2a2a;
+      --gold:      #c9a84c;
+      --gold-2:    #e8c97a;
+      --white:     #f0f0f0;
+      --muted:     #777;
+      --ease:      cubic-bezier(.25,.46,.45,.94);
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; font-size: 16px; }
 
     body {
       font-family: 'Inter', sans-serif;
       background: var(--black);
       color: var(--white);
+      overflow-x: hidden;
     }
 
-    /* NAV */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 60px;
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    /* ── CURSOR GLOW ── */
+    .cursor-glow {
+      pointer-events: none;
       position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 100;
-      background: rgba(13,13,13,0.92);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid #2a2a2a;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,.08) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      transition: transform .12s var(--ease);
     }
 
-    .logo {
+    /* ── NAV ── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 0 64px;
+      height: 70px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: transparent;
+      transition: background .4s var(--ease), border-color .4s;
+      border-bottom: 1px solid transparent;
+    }
+
+    #nav.scrolled {
+      background: rgba(8,8,8,.92);
+      backdrop-filter: blur(12px);
+      border-color: var(--border);
+    }
+
+    .nav-logo {
       font-family: 'Oswald', sans-serif;
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 700;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       color: var(--gold);
       text-transform: uppercase;
+      text-decoration: none;
     }
 
+    .nav-logo span { color: var(--white); }
+
     .nav-links {
-      display: flex;
-      gap: 36px;
-      list-style: none;
+      display: flex; gap: 40px; list-style: none;
     }
 
     .nav-links a {
-      color: var(--white);
-      text-decoration: none;
-      font-size: 13px;
-      letter-spacing: 1.5px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
-      opacity: 0.75;
-      transition: opacity 0.2s;
+      color: var(--muted);
+      text-decoration: none;
+      position: relative;
+      transition: color .25s;
     }
 
-    .nav-links a:hover { opacity: 1; color: var(--gold); }
-
-    .nav-btn {
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px;
       background: var(--gold);
-      color: var(--black);
-      padding: 10px 24px;
-      font-family: 'Oswald', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: background 0.2s;
+      transition: width .3s var(--ease);
     }
 
-    .nav-btn:hover { background: var(--gold-light); }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
 
-    /* HERO */
-    .hero {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 0 60px;
-      background: var(--black);
+    .nav-cta {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--gold);
+      padding: 11px 28px;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: color .3s;
+    }
+
+    .nav-cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--gold-2);
+      transform: translateX(-101%);
+      transition: transform .35s var(--ease);
+    }
+
+    .nav-cta:hover::before { transform: translateX(0); }
+    .nav-cta span { position: relative; z-index: 1; }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      height: 100vh; min-height: 680px;
+      display: flex; align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(105deg, rgba(8,8,8,.95) 40%, rgba(8,8,8,.55) 100%),
+        url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1600&q=85') center/cover no-repeat;
+      transform: scale(1.06);
+      transition: transform 8s var(--ease);
+    }
+
+    #hero.loaded .hero-bg { transform: scale(1); }
+
+    .hero-inner {
+      position: relative; z-index: 2;
+      padding: 0 64px;
+      max-width: 680px;
+    }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 4px; text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp .7s var(--ease) .3s forwards;
+    }
+
+    .hero-tag::before {
+      content: ''; display: block;
+      width: 32px; height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(52px, 7.5vw, 100px);
+      font-weight: 700;
+      line-height: .95;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      opacity: 0; transform: translateY(30px);
+      animation: fadeUp .8s var(--ease) .5s forwards;
+    }
+
+    .hero-h1 em {
+      font-style: normal;
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--gold);
+    }
+
+    .hero-p {
+      font-size: 15px; line-height: 1.8;
+      color: #999; max-width: 440px;
+      margin-bottom: 44px;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp .7s var(--ease) .7s forwards;
+    }
+
+    .hero-actions {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp .7s var(--ease) .9s forwards;
+    }
+
+    .btn-primary {
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--black);
+      background: var(--gold);
+      padding: 16px 42px;
+      text-decoration: none;
+      position: relative; overflow: hidden;
+      transition: color .3s;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--gold-2);
+      transform: translateX(-101%);
+      transition: transform .35s var(--ease);
+    }
+
+    .btn-primary:hover::before { transform: translateX(0); }
+    .btn-primary span { position: relative; z-index: 1; }
+
+    .btn-ghost {
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gold);
+      background: transparent;
+      border: 1px solid rgba(201,168,76,.4);
+      padding: 16px 42px;
+      text-decoration: none;
+      transition: background .3s, border-color .3s, color .3s;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(201,168,76,.08);
+      border-color: var(--gold);
+    }
+
+    .hero-scroll {
+      position: absolute; bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      animation: fadeIn 1s var(--ease) 1.4s forwards;
+    }
+
+    .scroll-line {
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ── STATS STRIP ── */
+    #stats {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .stat-item {
+      padding: 48px 40px;
+      border-right: 1px solid var(--border);
+      text-align: center;
       position: relative;
       overflow: hidden;
     }
 
-    .hero::before {
+    .stat-item:last-child { border-right: none; }
+
+    .stat-item::before {
       content: '';
-      position: absolute;
-      inset: 0;
-      background: url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=1400&q=80') center/cover no-repeat;
-      opacity: 0.18;
+      position: absolute; bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 2px;
+      background: var(--gold);
+      transition: width .5s var(--ease);
     }
 
-    .hero-content {
-      position: relative;
-      max-width: 620px;
+    .stat-item:hover::before { width: 80%; }
+
+    .stat-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 48px; font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 8px;
     }
 
-    .hero-tag {
-      font-size: 12px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
+    .stat-label {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── SECTION SHARED ── */
+    .section { padding: 120px 64px; }
+
+    .section-tag {
+      display: flex; align-items: center; gap: 14px;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 4px; text-transform: uppercase;
       color: var(--gold);
       margin-bottom: 20px;
     }
 
-    .hero h1 {
-      font-family: 'Oswald', sans-serif;
-      font-size: clamp(48px, 7vw, 90px);
-      font-weight: 700;
-      line-height: 1;
-      text-transform: uppercase;
-      margin-bottom: 24px;
-    }
-
-    .hero h1 span { color: var(--gold); }
-
-    .hero p {
-      font-size: 16px;
-      line-height: 1.7;
-      color: #aaa;
-      margin-bottom: 40px;
-      max-width: 460px;
-    }
-
-    .btn {
-      display: inline-block;
+    .section-tag::before {
+      content: '';
+      width: 36px; height: 1px;
       background: var(--gold);
-      color: var(--black);
-      padding: 16px 40px;
-      font-family: 'Oswald', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-
-    .btn:hover { background: var(--gold-light); }
-
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      margin-left: 16px;
-    }
-
-    .btn-outline:hover { background: var(--gold); color: var(--black); }
-
-    /* DIVIDER */
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .divider span {
-      width: 40px;
-      height: 1px;
-      background: var(--gold);
-    }
-
-    .divider p {
-      font-size: 11px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    /* SERVICES */
-    #servicos {
-      padding: 100px 60px;
-      background: var(--dark);
+      flex-shrink: 0;
     }
 
     .section-title {
       font-family: 'Oswald', sans-serif;
-      font-size: 40px;
+      font-size: clamp(32px, 4vw, 52px);
       font-weight: 700;
       text-transform: uppercase;
-      margin-bottom: 60px;
+      line-height: 1.05;
+      margin-bottom: 64px;
     }
+
+    /* ── REVEAL ANIMATION ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ── SERVICES ── */
+    #servicos { background: var(--black); }
 
     .services-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 2px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border);
     }
 
     .service-card {
       background: var(--card);
-      padding: 40px 32px;
-      border-top: 2px solid transparent;
-      transition: border-color 0.3s;
+      padding: 48px 36px;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: background .3s;
     }
 
-    .service-card:hover { border-color: var(--gold); }
-
-    .service-icon {
-      font-size: 28px;
-      margin-bottom: 20px;
+    .service-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--gold);
+      transition: height .4s var(--ease);
     }
 
-    .service-card h3 {
+    .service-card:hover { background: #1e1e1e; }
+    .service-card:hover::after { height: 100%; }
+
+    .service-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      margin-bottom: 28px;
+      filter: grayscale(40%) brightness(.85);
+      transition: filter .4s var(--ease);
+    }
+
+    .service-card:hover .service-img {
+      filter: grayscale(0%) brightness(1);
+    }
+
+    .service-name {
       font-family: 'Oswald', sans-serif;
-      font-size: 20px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      font-size: 20px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
       margin-bottom: 12px;
     }
 
-    .service-card p {
-      font-size: 14px;
+    .service-desc {
+      font-size: 13px; line-height: 1.75;
       color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     .service-price {
       font-family: 'Oswald', sans-serif;
-      font-size: 24px;
-      font-weight: 600;
+      font-size: 28px; font-weight: 600;
       color: var(--gold);
     }
 
-    /* ABOUT */
+    .service-price sup {
+      font-size: 14px; vertical-align: top;
+      margin-top: 6px; display: inline-block;
+    }
+
+    /* ── ABOUT ── */
     #sobre {
-      padding: 100px 60px;
-      background: var(--black);
+      background: var(--dark);
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
+      gap: 0;
     }
 
-    .about-img {
-      width: 100%;
-      height: 500px;
+    .about-media {
+      position: relative;
+      overflow: hidden;
+      min-height: 600px;
+    }
+
+    .about-media img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
       object-fit: cover;
-      filter: grayscale(30%);
+      filter: grayscale(25%);
+      transform: scale(1.06);
+      transition: transform 6s var(--ease);
     }
 
-    .about-content h2 {
-      font-family: 'Oswald', sans-serif;
-      font-size: 38px;
-      font-weight: 700;
-      text-transform: uppercase;
-      line-height: 1.1;
-      margin-bottom: 24px;
+    .about-media:hover img { transform: scale(1); }
+
+    .about-media::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, transparent 60%, var(--dark));
     }
 
-    .about-content h2 span { color: var(--gold); }
+    .about-body {
+      padding: 100px 72px 100px 64px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
 
-    .about-content p {
-      font-size: 15px;
-      color: #aaa;
-      line-height: 1.8;
+    .about-body h2 { margin-bottom: 28px; }
+    .about-body h2 span { color: var(--gold); }
+
+    .about-body p {
+      font-size: 15px; line-height: 1.85;
+      color: #999;
       margin-bottom: 16px;
     }
 
-    .stats {
-      display: flex;
-      gap: 40px;
-      margin-top: 40px;
+    .about-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
     }
 
-    .stat h4 {
+    .about-stat h4 {
       font-family: 'Oswald', sans-serif;
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--gold);
+      font-size: 38px; font-weight: 700;
+      color: var(--gold); line-height: 1;
+      margin-bottom: 6px;
     }
 
-    .stat p {
-      font-size: 12px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+    .about-stat p {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 2px; text-transform: uppercase;
       color: var(--muted);
       margin: 0;
     }
 
-    /* AGENDAMENTO */
-    #agendar {
-      padding: 100px 60px;
-      background: var(--gold);
-      text-align: center;
+    /* ── GALLERY ── */
+    #galeria {
+      background: var(--black);
+      padding: 120px 64px;
     }
 
-    #agendar h2 {
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 4px;
+    }
+
+    .gallery-item {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gallery-item:first-child {
+      grid-row: span 2;
+    }
+
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      min-height: 240px;
+      filter: grayscale(30%) brightness(.8);
+      transform: scale(1.04);
+      transition: transform .6s var(--ease), filter .6s;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1);
+      filter: grayscale(0%) brightness(1);
+    }
+
+    .gallery-item::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(201,168,76,0);
+      transition: background .4s;
+      z-index: 1;
+    }
+
+    .gallery-item:hover::before {
+      background: rgba(201,168,76,.08);
+    }
+
+    /* ── TESTIMONIALS ── */
+    #depoimentos {
+      background: var(--dark);
+      padding: 120px 64px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .testimonial {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 40px 36px;
+      position: relative;
+      transition: border-color .3s, transform .3s var(--ease);
+    }
+
+    .testimonial:hover {
+      border-color: rgba(201,168,76,.35);
+      transform: translateY(-4px);
+    }
+
+    .testimonial-stars {
+      display: flex; gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    .star {
+      width: 14px; height: 14px;
+      background: var(--gold);
+      clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+    }
+
+    .testimonial-text {
+      font-size: 14px; line-height: 1.8;
+      color: #aaa;
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex; align-items: center; gap: 14px;
+    }
+
+    .author-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      object-fit: cover;
+      filter: grayscale(20%);
+      border: 1.5px solid var(--border);
+    }
+
+    .author-info strong {
+      display: block;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: .5px;
+    }
+
+    .author-info span {
+      font-size: 11px; color: var(--muted);
+    }
+
+    /* ── CTA ── */
+    #cta {
+      position: relative;
+      overflow: hidden;
+      padding: 140px 64px;
+      text-align: center;
+      background: var(--black);
+    }
+
+    #cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(rgba(8,8,8,.85), rgba(8,8,8,.85)),
+        url('https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=1600&q=80') center/cover no-repeat;
+    }
+
+    .cta-inner { position: relative; z-index: 1; }
+
+    #cta h2 {
       font-family: 'Oswald', sans-serif;
-      font-size: 48px;
+      font-size: clamp(36px, 5vw, 64px);
       font-weight: 700;
       text-transform: uppercase;
-      color: var(--black);
       margin-bottom: 16px;
     }
 
-    #agendar p {
-      font-size: 16px;
-      color: rgba(0,0,0,0.6);
-      margin-bottom: 40px;
+    #cta h2 span { color: var(--gold); }
+
+    #cta p {
+      font-size: 15px; color: #888;
+      margin-bottom: 48px;
     }
 
-    .btn-dark {
-      display: inline-block;
-      background: var(--black);
-      color: var(--gold);
-      padding: 18px 52px;
-      font-family: 'Oswald', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-
-    .btn-dark:hover { background: #1a1a1a; }
-
-    /* FOOTER */
+    /* ── FOOTER ── */
     footer {
       background: var(--dark);
-      padding: 50px 60px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid #2a2a2a;
+      border-top: 1px solid var(--border);
+      padding: 64px 64px 40px;
     }
 
-    .footer-logo {
-      font-family: 'Oswald', sans-serif;
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 56px;
+    }
+
+    .footer-brand .nav-logo {
+      display: block;
+      margin-bottom: 18px;
       font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      color: var(--gold);
-      text-transform: uppercase;
     }
 
-    .footer-info {
-      text-align: center;
-      font-size: 13px;
+    .footer-brand p {
+      font-size: 13px; line-height: 1.8;
       color: var(--muted);
-      line-height: 1.8;
     }
 
-    .footer-social {
-      display: flex;
-      gap: 16px;
+    .footer-col h5 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      margin-bottom: 20px;
     }
 
-    .footer-social a {
-      width: 40px;
-      height: 40px;
-      border: 1px solid #333;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .footer-col ul { list-style: none; }
+
+    .footer-col li {
+      margin-bottom: 10px;
+      font-size: 13px; color: var(--muted);
+      transition: color .2s;
+    }
+
+    .footer-col li:hover { color: var(--white); cursor: default; }
+
+    .footer-col a {
+      font-size: 13px; color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .footer-col a:hover { color: var(--gold); }
+
+    .social-links {
+      display: flex; gap: 12px; margin-top: 24px;
+    }
+
+    .social-link {
+      width: 38px; height: 38px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
       color: var(--muted);
       text-decoration: none;
-      font-size: 16px;
-      transition: all 0.2s;
+      font-size: 15px;
+      transition: border-color .25s, color .25s, background .25s;
     }
 
-    .footer-social a:hover {
+    .social-link:hover {
       border-color: var(--gold);
       color: var(--gold);
+      background: rgba(201,168,76,.07);
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      nav { padding: 16px 24px; }
-      .nav-links { display: none; }
-      .hero { padding: 0 24px; }
-      #servicos, #sobre, #agendar, footer { padding: 70px 24px; }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--muted);
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 1; transform: scaleY(1); }
+      50% { opacity: .4; transform: scaleY(.7); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      #nav { padding: 0 32px; }
+      .hero-inner { padding: 0 32px; }
+      .section, #galeria, #depoimentos, #cta { padding: 80px 32px; }
       #sobre { grid-template-columns: 1fr; }
-      .about-img { height: 300px; }
-      footer { flex-direction: column; gap: 24px; text-align: center; }
+      .about-media { min-height: 400px; }
+      .about-media::after { display: none; }
+      .about-body { padding: 64px 32px; }
+      footer { padding: 64px 32px 32px; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      #stats { grid-template-columns: 1fr 1fr; }
+      .stat-item:nth-child(2) { border-right: none; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item:first-child { grid-row: span 1; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 12px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- CURSOR GLOW -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
   <!-- NAV -->
-  <nav>
-    <div class="logo">BarberPrimeCut</div>
+  <nav id="nav">
+    <a href="#" class="nav-logo">Barber<span>PrimeCut</span></a>
     <ul class="nav-links">
       <li><a href="#servicos">Serviços</a></li>
       <li><a href="#sobre">Sobre</a></li>
-      <li><a href="#agendar">Contato</a></li>
+      <li><a href="#galeria">Galeria</a></li>
+      <li><a href="#depoimentos">Clientes</a></li>
     </ul>
-    <a href="https://wa.me/5511999999999" class="nav-btn">Agendar Agora</a>
+    <a href="https://wa.me/5511999999999" class="nav-cta"><span>Agendar Horário</span></a>
   </nav>
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="hero-content">
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
       <p class="hero-tag">Studio Masculino Premium</p>
-      <h1>Estilo que<br /><span>define</span> você</h1>
-      <p>Corte, barba e muito mais — num ambiente feito pra você. Profissionais experientes, atendimento exclusivo e resultado impecável.</p>
-      <a href="#agendar" class="btn">Agendar Horário</a>
-      <a href="#servicos" class="btn btn-outline">Ver Serviços</a>
+      <h1 class="hero-h1">
+        A arte<br />do seu<br /><em>estilo</em>
+      </h1>
+      <p class="hero-p">
+        Cada detalhe importa. Corte preciso, barba impecável e uma experiência que você não vai esquecer.
+      </p>
+      <div class="hero-actions">
+        <a href="https://wa.me/5511999999999" class="btn-primary"><span>Agendar Agora</span></a>
+        <a href="#servicos" class="btn-ghost">Ver Serviços</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
     </div>
   </section>
 
+  <!-- STATS -->
+  <div id="stats">
+    <div class="stat-item reveal">
+      <div class="stat-num" data-count="8">0</div>
+      <div class="stat-label">Anos no mercado</div>
+    </div>
+    <div class="stat-item reveal" style="transition-delay:.1s">
+      <div class="stat-num" data-count="4000">0</div>
+      <div class="stat-label">Clientes atendidos</div>
+    </div>
+    <div class="stat-item reveal" style="transition-delay:.2s">
+      <div class="stat-num" data-count="6">0</div>
+      <div class="stat-label">Profissionais</div>
+    </div>
+    <div class="stat-item reveal" style="transition-delay:.3s">
+      <div class="stat-num" data-count="5" data-suffix="★">0</div>
+      <div class="stat-label">Avaliação média</div>
+    </div>
+  </div>
+
   <!-- SERVIÇOS -->
-  <section id="servicos">
-    <div class="divider"><span></span><p>O que oferecemos</p></div>
-    <h2 class="section-title">Nossos Serviços</h2>
+  <section id="servicos" class="section">
+    <div class="section-tag reveal">Nossos Serviços</div>
+    <h2 class="section-title reveal">O que fazemos<br /><span style="color:var(--gold)">por você</span></h2>
     <div class="services-grid">
 
-      <div class="service-card">
-        <div class="service-icon">✂️</div>
-        <h3>Corte Masculino</h3>
-        <p>Do clássico ao moderno, todos os estilos executados com precisão e atenção aos detalhes.</p>
-        <div class="service-price">R$ 45</div>
+      <div class="service-card reveal">
+        <img class="service-img"
+          src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=600&q=80"
+          alt="Corte masculino"
+          loading="lazy" />
+        <div class="service-name">Corte Masculino</div>
+        <p class="service-desc">Do clássico ao contemporâneo. Técnica e precisão para o seu estilo único.</p>
+        <div class="service-price"><sup>R$</sup>45</div>
       </div>
 
-      <div class="service-card">
-        <div class="service-icon">🪒</div>
-        <h3>Barba Completa</h3>
-        <p>Modelagem, hidratação e acabamento perfeito para sua barba com navalha e produtos premium.</p>
-        <div class="service-price">R$ 35</div>
+      <div class="service-card reveal" style="transition-delay:.1s">
+        <img class="service-img"
+          src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=600&q=80"
+          alt="Barba completa"
+          loading="lazy" />
+        <div class="service-name">Barba Completa</div>
+        <p class="service-desc">Modelagem com navalha, hidratação e acabamento profissional para sua barba.</p>
+        <div class="service-price"><sup>R$</sup>35</div>
       </div>
 
-      <div class="service-card">
-        <div class="service-icon">💈</div>
-        <h3>Corte + Barba</h3>
-        <p>O combo completo para quem quer sair totalmente renovado em uma única visita.</p>
-        <div class="service-price">R$ 70</div>
+      <div class="service-card reveal" style="transition-delay:.2s">
+        <img class="service-img"
+          src="https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=600&q=80"
+          alt="Combo corte e barba"
+          loading="lazy" />
+        <div class="service-name">Corte + Barba</div>
+        <p class="service-desc">O combo completo. Saia totalmente renovado em uma única visita.</p>
+        <div class="service-price"><sup>R$</sup>70</div>
       </div>
 
-      <div class="service-card">
-        <div class="service-icon">🧴</div>
-        <h3>Hidratação Capilar</h3>
-        <p>Tratamento profissional para cabelos ressecados ou danificados, com produtos especializados.</p>
-        <div class="service-price">R$ 55</div>
+      <div class="service-card reveal" style="transition-delay:.3s">
+        <img class="service-img"
+          src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&q=80"
+          alt="Hidratação capilar"
+          loading="lazy" />
+        <div class="service-name">Hidratação Capilar</div>
+        <p class="service-desc">Tratamento profissional com produtos premium para cabelos ressecados.</p>
+        <div class="service-price"><sup>R$</sup>55</div>
       </div>
 
     </div>
@@ -455,53 +868,230 @@
 
   <!-- SOBRE -->
   <section id="sobre">
-    <img
-      class="about-img"
-      src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80"
-      alt="Interior do estúdio"
-    />
-    <div class="about-content">
-      <div class="divider"><span></span><p>Quem somos</p></div>
-      <h2>Tradição e <span>modernidade</span> em cada corte</h2>
-      <p>O BarberPrimeCut Studio é um espaço pensado para o homem moderno que valoriza qualidade, estilo e bem-estar. Nossos barbeiros são treinados para oferecer o melhor atendimento da cidade.</p>
-      <p>Cada detalhe do nosso ambiente foi pensado para proporcionar uma experiência única — desde a cadeira até o produto que finalizamos no seu cabelo.</p>
-      <div class="stats">
-        <div class="stat">
+    <div class="about-media reveal-left">
+      <img
+        src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=900&q=85"
+        alt="Interior do estúdio"
+        loading="lazy"
+      />
+    </div>
+    <div class="about-body">
+      <div class="section-tag reveal">Nossa história</div>
+      <h2 class="section-title reveal" style="margin-bottom:0">
+        Tradição que<br /><span>evolui com</span><br />você
+      </h2>
+      <div style="margin-top:28px">
+        <p class="reveal">
+          O BarberPrimeCut nasceu da paixão por um serviço masculino de verdade. Oito anos depois, somos referência em qualidade, ambiente e experiência.
+        </p>
+        <p class="reveal" style="transition-delay:.1s">
+          Cada barbeiro do nosso time passou por treinamento especializado para entregar precisão em cada corte, detalhe em cada barba.
+        </p>
+      </div>
+      <div class="about-stats">
+        <div class="about-stat reveal">
           <h4>8+</h4>
-          <p>Anos de experiência</p>
+          <p>Anos de mercado</p>
         </div>
-        <div class="stat">
+        <div class="about-stat reveal" style="transition-delay:.1s">
           <h4>4k+</h4>
-          <p>Clientes atendidos</p>
+          <p>Clientes</p>
         </div>
-        <div class="stat">
-          <h4>5★</h4>
-          <p>Avaliação média</p>
+        <div class="about-stat reveal" style="transition-delay:.2s">
+          <h4>100%</h4>
+          <p>Satisfação</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA AGENDAR -->
-  <section id="agendar">
-    <h2>Pronto para o próximo nível?</h2>
-    <p>Agende agora pelo WhatsApp e garanta seu horário.</p>
-    <a href="https://wa.me/5511999999999" class="btn-dark">📲 Falar pelo WhatsApp</a>
+  <!-- GALERIA -->
+  <section id="galeria">
+    <div class="section-tag reveal">Galeria</div>
+    <h2 class="section-title reveal">Nosso <span style="color:var(--gold)">trabalho</span></h2>
+    <div class="gallery-grid">
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1593702288056-7cc2e5f49668?w=800&q=80" alt="Trabalho 1" loading="lazy" />
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:.1s">
+        <img src="https://images.unsplash.com/photo-1599351431613-2a8b1c3dff45?w=600&q=80" alt="Trabalho 2" loading="lazy" />
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:.15s">
+        <img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?w=600&q=80" alt="Trabalho 3" loading="lazy" />
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:.2s">
+        <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&q=80" alt="Trabalho 4" loading="lazy" />
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:.25s">
+        <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&q=80" alt="Trabalho 5" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- DEPOIMENTOS -->
+  <section id="depoimentos">
+    <div class="section-tag reveal">Clientes</div>
+    <h2 class="section-title reveal">O que dizem<br /><span style="color:var(--gold)">sobre nós</span></h2>
+    <div class="testimonials-grid">
+
+      <div class="testimonial reveal">
+        <div class="testimonial-stars">
+          <div class="star"></div><div class="star"></div><div class="star"></div>
+          <div class="star"></div><div class="star"></div>
+        </div>
+        <p class="testimonial-text">"Melhor barbearia que já fui. O corte ficou exatamente como eu queria e o atendimento é diferenciado do começo ao fim."</p>
+        <div class="testimonial-author">
+          <img class="author-avatar" src="https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?w=100&q=80" alt="Rafael M." />
+          <div class="author-info">
+            <strong>Rafael M.</strong>
+            <span>Cliente há 3 anos</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial reveal" style="transition-delay:.1s">
+        <div class="testimonial-stars">
+          <div class="star"></div><div class="star"></div><div class="star"></div>
+          <div class="star"></div><div class="star"></div>
+        </div>
+        <p class="testimonial-text">"Ambiente incrível, profissionais altamente qualificados. Não troco por nenhuma outra barbearia da cidade."</p>
+        <div class="testimonial-author">
+          <img class="author-avatar" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80" alt="Lucas T." />
+          <div class="author-info">
+            <strong>Lucas T.</strong>
+            <span>Cliente há 2 anos</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial reveal" style="transition-delay:.2s">
+        <div class="testimonial-stars">
+          <div class="star"></div><div class="star"></div><div class="star"></div>
+          <div class="star"></div><div class="star"></div>
+        </div>
+        <p class="testimonial-text">"O combo corte + barba vale cada centavo. Saio de lá sentindo outro. Atendimento pontual e preciso."</p>
+        <div class="testimonial-author">
+          <img class="author-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80" alt="André P." />
+          <div class="author-info">
+            <strong>André P.</strong>
+            <span>Cliente há 1 ano</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta">
+    <div class="cta-inner">
+      <p class="section-tag reveal" style="justify-content:center">Pronto para começar?</p>
+      <h2 class="reveal">Reserve seu<br /><span>horário agora</span></h2>
+      <p class="reveal">Atendimento de segunda a sábado, das 9h às 20h.</p>
+      <a href="https://wa.me/5511999999999" class="btn-primary reveal">
+        <span>💬 Falar pelo WhatsApp</span>
+      </a>
+    </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <div class="footer-logo">BarberPrimeCut</div>
-    <div class="footer-info">
-      Rua Exemplo, 123 — Centro, São Paulo/SP<br />
-      Seg–Sáb: 9h às 20h &nbsp;|&nbsp; (11) 9 9999-9999
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo">Barber<span>PrimeCut</span></a>
+        <p>Studio masculino premium dedicado ao estilo, precisão e experiência que você merece.</p>
+        <div class="social-links">
+          <a href="#" class="social-link" title="Instagram">📸</a>
+          <a href="#" class="social-link" title="WhatsApp">💬</a>
+          <a href="#" class="social-link" title="Facebook">👍</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Serviços</h5>
+        <ul>
+          <li>Corte Masculino</li>
+          <li>Barba Completa</li>
+          <li>Corte + Barba</li>
+          <li>Hidratação Capilar</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Horários</h5>
+        <ul>
+          <li>Seg – Sex: 9h – 20h</li>
+          <li>Sábado: 9h – 18h</li>
+          <li>Domingo: Fechado</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contato</h5>
+        <ul>
+          <li><a href="#">(11) 9 9999-9999</a></li>
+          <li><a href="#">contato@barberprime.com</a></li>
+          <li>Rua Exemplo, 123<br />Centro — São Paulo/SP</li>
+        </ul>
+      </div>
     </div>
-    <div class="footer-social">
-      <a href="#" title="Instagram">📸</a>
-      <a href="#" title="WhatsApp">💬</a>
-      <a href="#" title="Facebook">👍</a>
+    <div class="footer-bottom">
+      <span>© 2024 BarberPrimeCut Studio. Todos os direitos reservados.</span>
+      <span>Feito com precisão e estilo.</span>
     </div>
   </footer>
 
+  <script>
+    // ── Cursor Glow ──
+    const glow = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top  = e.clientY + 'px';
+    });
+
+    // ── Nav scroll ──
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // ── Hero BG loaded ──
+    window.addEventListener('load', () => {
+      document.getElementById('hero').classList.add('loaded');
+    });
+
+    // ── Scroll reveal ──
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealEls.forEach(el => observer.observe(el));
+
+    // ── Counter animation ──
+    const counterEls = document.querySelectorAll('.stat-num[data-count]');
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el     = entry.target;
+        const target = +el.dataset.count;
+        const suffix = el.dataset.suffix || '';
+        const duration = 1600;
+        const step = Math.ceil(target / (duration / 16));
+        let current = 0;
+        const tick = () => {
+          current = Math.min(current + step, target);
+          el.textContent = (target >= 1000 ? (current / 1000).toFixed(1) + 'k' : current) + suffix;
+          if (current < target) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        counterObserver.unobserve(el);
+      });
+    }, { threshold: .5 });
+
+    counterEls.forEach(el => counterObserver.observe(el));
+  </script>
 </body>
 </html>
