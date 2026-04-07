@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BarberCut Studio — Barbearia Masculina</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0d0d0d;
+      --dark: #1a1a1a;
+      --card: #222222;
+      --gold: #c8a84b;
+      --gold-light: #e2c97e;
+      --white: #f5f5f5;
+      --muted: #888;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--black);
+      color: var(--white);
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #2a2a2a;
+    }
+
+    .logo {
+      font-family: 'Oswald', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.75;
+      transition: opacity 0.2s;
+    }
+
+    .nav-links a:hover { opacity: 1; color: var(--gold); }
+
+    .nav-btn {
+      background: var(--gold);
+      color: var(--black);
+      padding: 10px 24px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .nav-btn:hover { background: var(--gold-light); }
+
+    /* HERO */
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 60px;
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=1400&q=80') center/cover no-repeat;
+      opacity: 0.18;
+    }
+
+    .hero-content {
+      position: relative;
+      max-width: 620px;
+    }
+
+    .hero-tag {
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(48px, 7vw, 90px);
+      font-weight: 700;
+      line-height: 1;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 span { color: var(--gold); }
+
+    .hero p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #aaa;
+      margin-bottom: 40px;
+      max-width: 460px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      padding: 16px 40px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn:hover { background: var(--gold-light); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      margin-left: 16px;
+    }
+
+    .btn-outline:hover { background: var(--gold); color: var(--black); }
+
+    /* DIVIDER */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .divider span {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .divider p {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* SERVICES */
+    #servicos {
+      padding: 100px 60px;
+      background: var(--dark);
+    }
+
+    .section-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 40px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 60px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2px;
+    }
+
+    .service-card {
+      background: var(--card);
+      padding: 40px 32px;
+      border-top: 2px solid transparent;
+      transition: border-color 0.3s;
+    }
+
+    .service-card:hover { border-color: var(--gold); }
+
+    .service-icon {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .service-card h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .service-card p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .service-price {
+      font-family: 'Oswald', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    /* ABOUT */
+    #sobre {
+      padding: 100px 60px;
+      background: var(--black);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      filter: grayscale(30%);
+    }
+
+    .about-content h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 38px;
+      font-weight: 700;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .about-content h2 span { color: var(--gold); }
+
+    .about-content p {
+      font-size: 15px;
+      color: #aaa;
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .stat h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .stat p {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* AGENDAMENTO */
+    #agendar {
+      padding: 100px 60px;
+      background: var(--gold);
+      text-align: center;
+    }
+
+    #agendar h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--black);
+      margin-bottom: 16px;
+    }
+
+    #agendar p {
+      font-size: 16px;
+      color: rgba(0,0,0,0.6);
+      margin-bottom: 40px;
+    }
+
+    .btn-dark {
+      display: inline-block;
+      background: var(--black);
+      color: var(--gold);
+      padding: 18px 52px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-dark:hover { background: #1a1a1a; }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark);
+      padding: 50px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #2a2a2a;
+    }
+
+    .footer-logo {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .footer-info {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .footer-social a:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 0 24px; }
+      #servicos, #sobre, #agendar, footer { padding: 70px 24px; }
+      #sobre { grid-template-columns: 1fr; }
+      .about-img { height: 300px; }
+      footer { flex-direction: column; gap: 24px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">BarberCut</div>
+    <ul class="nav-links">
+      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#agendar">Contato</a></li>
+    </ul>
+    <a href="https://wa.me/5511999999999" class="nav-btn">Agendar Agora</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-tag">Studio Masculino Premium</p>
+      <h1>Estilo que<br /><span>define</span> você</h1>
+      <p>Corte, barba e muito mais — num ambiente feito pra você. Profissionais experientes, atendimento exclusivo e resultado impecável.</p>
+      <a href="#agendar" class="btn">Agendar Horário</a>
+      <a href="#servicos" class="btn btn-outline">Ver Serviços</a>
+    </div>
+  </section>
+
+  <!-- SERVIÇOS -->
+  <section id="servicos">
+    <div class="divider"><span></span><p>O que oferecemos</p></div>
+    <h2 class="section-title">Nossos Serviços</h2>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <div class="service-icon">✂️</div>
+        <h3>Corte Masculino</h3>
+        <p>Do clássico ao moderno, todos os estilos executados com precisão e atenção aos detalhes.</p>
+        <div class="service-price">R$ 45</div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🪒</div>
+        <h3>Barba Completa</h3>
+        <p>Modelagem, hidratação e acabamento perfeito para sua barba com navalha e produtos premium.</p>
+        <div class="service-price">R$ 35</div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">💈</div>
+        <h3>Corte + Barba</h3>
+        <p>O combo completo para quem quer sair totalmente renovado em uma única visita.</p>
+        <div class="service-price">R$ 70</div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🧴</div>
+        <h3>Hidratação Capilar</h3>
+        <p>Tratamento profissional para cabelos ressecados ou danificados, com produtos especializados.</p>
+        <div class="service-price">R$ 55</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section id="sobre">
+    <img
+      class="about-img"
+      src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80"
+      alt="Interior do estúdio"
+    />
+    <div class="about-content">
+      <div class="divider"><span></span><p>Quem somos</p></div>
+      <h2>Tradição e <span>modernidade</span> em cada corte</h2>
+      <p>O BarberCut Studio é um espaço pensado para o homem moderno que valoriza qualidade, estilo e bem-estar. Nossos barbeiros são treinados para oferecer o melhor atendimento da cidade.</p>
+      <p>Cada detalhe do nosso ambiente foi pensado para proporcionar uma experiência única — desde a cadeira até o produto que finalizamos no seu cabelo.</p>
+      <div class="stats">
+        <div class="stat">
+          <h4>8+</h4>
+          <p>Anos de experiência</p>
+        </div>
+        <div class="stat">
+          <h4>4k+</h4>
+          <p>Clientes atendidos</p>
+        </div>
+        <div class="stat">
+          <h4>5★</h4>
+          <p>Avaliação média</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA AGENDAR -->
+  <section id="agendar">
+    <h2>Pronto para o próximo nível?</h2>
+    <p>Agende agora pelo WhatsApp e garanta seu horário.</p>
+    <a href="https://wa.me/5511999999999" class="btn-dark">📲 Falar pelo WhatsApp</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">BarberCut</div>
+    <div class="footer-info">
+      Rua Exemplo, 123 — Centro, São Paulo/SP<br />
+      Seg–Sáb: 9h às 20h &nbsp;|&nbsp; (11) 9 9999-9999
+    </div>
+    <div class="footer-social">
+      <a href="#" title="Instagram">📸</a>
+      <a href="#" title="WhatsApp">💬</a>
+      <a href="#" title="Facebook">👍</a>
+    </div>
+  </footer>
+
+</body>
+</html>
